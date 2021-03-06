@@ -10,19 +10,23 @@
     <RelativeLayout
         android:id="@+id/main_bottom_relative"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true">
+        android:layout_height="55dp"
+        android:layout_alignParentTop="true">
         <ImageView
             android:id="@+id/iv_add"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@mipmap/add2">
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/add">
         </ImageView>
         <ImageView
             android:id="@+id/iv_more"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@mipmap/more"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/more2"
             android:layout_alignParentRight="true">
         </ImageView>
         <LinearLayout
@@ -39,7 +43,7 @@
         android:id="@+id/main_vp"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_above="@+id/main_bottom_relative">
+        android:layout_below="@+id/main_bottom_relative">
 
     </androidx.viewpager.widget.ViewPager>
 
