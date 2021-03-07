@@ -101,9 +101,9 @@
                     android:id="@+id/frag_tv_xiexian1"
                     style="@style/threeDayText"
                     android:text="/"
-                    android:layout_toLeftOf="@+id/frag_iv_today_max"/>
+                    android:layout_toLeftOf="@+id/frag_tv_today_max"/>
                 <TextView
-                    android:id="@+id/frag_iv_today_max"
+                    android:id="@+id/frag_tv_today_max"
                     style="@style/threeDayText"
                     android:text="4℃"
                     android:layout_alignParentRight="true"/>
@@ -133,9 +133,9 @@
                     android:id="@+id/frag_tv_xiexian2"
                     style="@style/threeDayText"
                     android:text="/"
-                    android:layout_toLeftOf="@+id/frag_iv_tomorrow_max"/>
+                    android:layout_toLeftOf="@+id/frag_tv_tomorrow_max"/>
                 <TextView
-                    android:id="@+id/frag_iv_tomorrow_max"
+                    android:id="@+id/frag_tv_tomorrow_max"
                     style="@style/threeDayText"
                     android:text="4℃"
                     android:layout_alignParentRight="true"/>
@@ -165,9 +165,9 @@
                     android:id="@+id/frag_tv_xiexian3"
                     style="@style/threeDayText"
                     android:text="/"
-                    android:layout_toLeftOf="@+id/frag_iv_nextTomorrow_max"/>
+                    android:layout_toLeftOf="@+id/frag_tv_nextTomorrow_max"/>
                 <TextView
-                    android:id="@+id/frag_iv_nextTomorrow_max"
+                    android:id="@+id/frag_tv_nextTomorrow_max"
                     style="@style/threeDayText"
                     android:text="4℃"
                     android:layout_alignParentRight="true"/>

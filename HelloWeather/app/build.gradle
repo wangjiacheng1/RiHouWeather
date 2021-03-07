@@ -29,7 +29,12 @@ android {
 }
 
 dependencies {
-    implementation
+    //封装完善的多功能框架，此处主要使用网络获取数据功能
+    implementation 'org.xutils:xutils:3.7.6'
+    //加载网络图片的框架
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    //解析json数据的框架
+    implementation 'com.google.code.gson:gson:2.2.4'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'

@@ -7,58 +7,100 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CityWeatherFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class CityWeatherFragment extends Fragment {
+import com.example.helloweather.bean.CurrentMsg;
+import com.google.gson.Gson;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class CityWeatherFragment extends BaseFragment implements View.OnClickListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    TextView cityTv, tempTv, conditionTv, todayTextTv, tomorrowTextTv, nextTomorrowTextTv,
+            todayMinTv, todayMaxTv, tomorrowMinTv, tomorrowMaxTv, nextMinTv, nextMaxTv;
+    TextView dressIndexTv, sunIndexTv, coldIndexTv, umbrellaIndexTv, carIndexTv, exerciseIndexTv;
+    ImageView todayIcon, tomorrowIcon, nextIcon;
+    LinearLayout todayLayout, tomorrowLayout, nextLayout;
 
-    public CityWeatherFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CityWeatherFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CityWeatherFragment newInstance(String param1, String param2) {
-        CityWeatherFragment fragment = new CityWeatherFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    String url1 = "https://devapi.qweather.com/v7/weather/now?location=";
+    String url2 = "&key=90b7b38c6f0742ccbbabc7105d6425e5";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_city_weather, container, false);
+        View view = inflater.inflate(R.layout.fragment_city_weather, container, false);
+        initView(view);
+        //通过activity传值当前城市给fragment
+        Bundle bundle = getArguments();
+        String city = bundle.getString("city");
+        String url = url1 + city + url2;
+        //调用父类获取数据的方法
+        loadData(url);
+        return view;
+    }
+
+    //重写父类获取数据的方法
+    @Override
+    public void onSuccess(String result) {
+        //解析并展示数据
+        parseShowData(result);
+    }
+    @Override
+    public void onError(Throwable ex, boolean isOnCallback) {
+        super.onError(ex, isOnCallback);
+    }
+
+    public void parseShowData(String result){
+        //使用Gson解析数据
+        CurrentMsg currentMsg = new Gson().fromJson(result, CurrentMsg.class);
+        String currentTemp = currentMsg.getNow().getTemp();
+        String icon = currentMsg.getNow().getIcon();
+        String condition = currentMsg.getNow().getText();
+    }
+
+    private void initView(View view){
+        //初始化控件
+        cityTv = view.findViewById(R.id.frag_tv_city);
+        tempTv = view.findViewById(R.id.frag_tv_currentTemp);
+        conditionTv = view.findViewById(R.id.frag_tv_condition);
+        todayTextTv = view.findViewById(R.id.frag_tv_today_text);
+        tomorrowTextTv = view.findViewById(R.id.frag_tv_tomorrow_text);
+        nextTomorrowTextTv = view.findViewById(R.id.frag_tv_nextTomorrow_text);
+        todayMinTv = view.findViewById(R.id.frag_tv_today_min);
+        todayMaxTv = view.findViewById(R.id.frag_tv_today_max);
+        tomorrowMinTv = view.findViewById(R.id.frag_tv_tomorrow_min);
+        tomorrowMaxTv = view.findViewById(R.id.frag_tv_tomorrow_max);
+        nextMinTv = view.findViewById(R.id.frag_tv_nextTomorrow_min);
+        nextMaxTv = view.findViewById(R.id.frag_tv_nextTomorrow_max);
+        dressIndexTv = view.findViewById(R.id.frag_index_dress);
+        sunIndexTv = view.findViewById(R.id.frag_index_sun);
+        coldIndexTv = view.findViewById(R.id.frag_index_cold);
+        umbrellaIndexTv = view.findViewById(R.id.frag_index_umbrella);
+        carIndexTv = view.findViewById(R.id.frag_index_washCar);
+        exerciseIndexTv = view.findViewById(R.id.frag_index_exercise);
+
+        todayIcon = view.findViewById(R.id.frag_iv_today_icon);
+        tomorrowIcon = view.findViewById(R.id.frag_iv_tomorrow_icon);
+        nextIcon = view.findViewById(R.id.frag_iv_nextTomorrow_icon);
+
+        todayLayout = view.findViewById(R.id.frag_layout_today);
+        tomorrowLayout = view.findViewById(R.id.frag_layout_tomorrow);
+        nextLayout = view.findViewById(R.id.frag_layout_nextTomorrow);
+        //设置点击事件，跳转到每天详情页
+        todayLayout.setOnClickListener(this);
+        tomorrowLayout.setOnClickListener(this);
+        nextLayout.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.frag_layout_today:
+                break;
+            case R.id.frag_layout_tomorrow:
+                break;
+            case R.id.frag_layout_nextTomorrow:
+                break;
+        }
     }
 }
