@@ -1,9 +1,11 @@
 package com.example.helloweather;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,14 @@ import android.widget.TextView;
 
 import com.example.helloweather.bean.CurrentMsg;
 import com.google.gson.Gson;
+import com.qweather.sdk.bean.base.Code;
+import com.qweather.sdk.bean.weather.WeatherNowBean;
+import com.qweather.sdk.view.QWeather;
 
-public class CityWeatherFragment extends BaseFragment implements View.OnClickListener {
+import static com.qweather.sdk.bean.base.Code.OK;
+
+public class CityWeatherFragment extends Fragment implements View.OnClickListener {
+    public static final String TAG = "CityWeatherFragment";
 
     TextView cityTv, tempTv, conditionTv, todayTextTv, tomorrowTextTv, nextTomorrowTextTv,
             todayMinTv, todayMaxTv, tomorrowMinTv, tomorrowMaxTv, nextMinTv, nextMaxTv;
@@ -23,8 +31,6 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
     ImageView todayIcon, tomorrowIcon, nextIcon;
     RelativeLayout todayLayout, tomorrowLayout, nextLayout;
 
-    String url1 = "https://devapi.qweather.com/v7/weather/now?location=";
-    String url2 = "&key=f1f0fb53e53542a59a6a1cb9081b59bb";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,31 +40,40 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         //通过activity传值当前城市给fragment
         Bundle bundle = getArguments();
         String city = bundle.getString("city");
-        String url = url1 + city + url2;
-        //调用父类获取数据的方法
-        loadData(url);
+
+        parseShowData(city);
         return view;
     }
 
-    //重写父类获取数据的方法
-    @Override
-    public void onSuccess(String result) {
-        //解析并展示数据
-        parseShowData(result);
-    }
-    @Override
-    public void onError(Throwable ex, boolean isOnCallback) {
-        super.onError(ex, isOnCallback);
-    }
-
     //解析展示数据
-    public void parseShowData(String result){
-        //使用Gson解析数据
-        CurrentMsg currentMsg = new Gson().fromJson(result, CurrentMsg.class);
-        String currentTemp = currentMsg.getNow().getTemp();
-        String condition = currentMsg.getNow().getText();
-        tempTv.setText(currentTemp);
-        conditionTv.setText(condition);
+    public void parseShowData(String city){
+        //获得并解析数据
+        Context context = getContext();
+        QWeather.getWeatherNow(context, "CN101010100", new QWeather.OnResultWeatherNowListener() {
+            @Override
+            public void onError(Throwable e) {
+                Log.i(TAG, "getWeather onError: " + e);
+            }
+
+            @Override
+            public void onSuccess(WeatherNowBean weatherBean) {
+                Log.i(TAG, "getWeather onSuccess: " + new Gson().toJson(weatherBean));
+                //先判断返回的status是否正确，当status正确时获取数据，若status不正确，可查看status对应的Code值找到原因
+                if (Code.OK.getCode().equalsIgnoreCase(String.valueOf(weatherBean.getCode()))) {
+                    WeatherNowBean.NowBaseBean now = weatherBean.getNow();
+                    String currentTemp = now.getTemp();
+                    String condition = now.getText();
+                    tempTv.setText(currentTemp);
+                    conditionTv.setText(condition);
+                } else {
+                    //在此查看返回数据失败的原因
+                    String status = String.valueOf(weatherBean.getCode());
+                    Code code = Code.toEnum(status);
+                    Log.i(TAG, "failed code: " + code);
+                }
+            }
+
+        });
     }
 
     private void initView(View view){
