@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CityWeatherFragment"
-    android:background="@mipmap/bg1">
+    tools:context=".CityWeatherFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -85,7 +84,7 @@
                     android:id="@+id/frag_iv_today_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@mipmap/cloudy"/>
+                    android:src="@mipmap/i103"/>
                 <TextView
                     android:id="@+id/frag_tv_today_text"
                     style="@style/threeDayText"
@@ -117,7 +116,7 @@
                     android:id="@+id/frag_iv_tomorrow_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@mipmap/shine"/>
+                    android:src="@mipmap/i100"/>
                 <TextView
                     android:id="@+id/frag_tv_tomorrow_text"
                     style="@style/threeDayText"
@@ -149,7 +148,7 @@
                     android:id="@+id/frag_iv_nextTomorrow_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@mipmap/overCast"/>
+                    android:src="@mipmap/i101"/>
                 <TextView
                     android:id="@+id/frag_tv_nextTomorrow_text"
                     style="@style/threeDayText"

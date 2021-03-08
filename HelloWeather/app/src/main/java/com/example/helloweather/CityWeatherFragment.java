@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.helloweather.bean.CurrentMsg;
@@ -20,10 +21,10 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
             todayMinTv, todayMaxTv, tomorrowMinTv, tomorrowMaxTv, nextMinTv, nextMaxTv;
     TextView dressIndexTv, sunIndexTv, coldIndexTv, umbrellaIndexTv, carIndexTv, exerciseIndexTv;
     ImageView todayIcon, tomorrowIcon, nextIcon;
-    LinearLayout todayLayout, tomorrowLayout, nextLayout;
+    RelativeLayout todayLayout, tomorrowLayout, nextLayout;
 
     String url1 = "https://devapi.qweather.com/v7/weather/now?location=";
-    String url2 = "&key=90b7b38c6f0742ccbbabc7105d6425e5";
+    String url2 = "&key=f1f0fb53e53542a59a6a1cb9081b59bb";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,12 +51,14 @@ public class CityWeatherFragment extends BaseFragment implements View.OnClickLis
         super.onError(ex, isOnCallback);
     }
 
+    //解析展示数据
     public void parseShowData(String result){
         //使用Gson解析数据
         CurrentMsg currentMsg = new Gson().fromJson(result, CurrentMsg.class);
         String currentTemp = currentMsg.getNow().getTemp();
-        String icon = currentMsg.getNow().getIcon();
         String condition = currentMsg.getNow().getText();
+        tempTv.setText(currentTemp);
+        conditionTv.setText(condition);
     }
 
     private void initView(View view){
