@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imgList = new ArrayList<>();
 
         if (cityList.size() == 0){
-            cityList.add("101010100");
+            cityList.add("CN101010100");
         }
         //初始化viewPager页面
         initPager();

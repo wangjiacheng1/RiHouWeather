@@ -39,7 +39,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         initView(view);
         //通过activity传值当前城市给fragment
         Bundle bundle = getArguments();
-        String city = bundle.getString("city");
+        String city = bundle.getString("city","CN101010100");
 
         parseShowData(city);
         return view;
@@ -49,7 +49,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     public void parseShowData(String city){
         //获得并解析数据
         Context context = getContext();
-        QWeather.getWeatherNow(context, "CN101010100", new QWeather.OnResultWeatherNowListener() {
+        QWeather.getWeatherNow(context, city, new QWeather.OnResultWeatherNowListener() {
             @Override
             public void onError(Throwable e) {
                 Log.i(TAG, "getWeather onError: " + e);

@@ -8,6 +8,33 @@
     <TextView
         android:id="@+id/item_cityTv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:text="北京"
+        android:textColor="@color/snow"
+        android:textSize="30dp"/>
+
+    <TextView
+        android:id="@+id/item_minAndMaxTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:text="3℃ / 13℃"
+        android:textColor="@color/snow"
+        android:textSize="15dp"
+        android:layout_below="@+id/item_cityTv"/>
+
+    <TextView
+        android:id="@+id/item_currentTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:text="10°"
+        android:textColor="@color/snow"
+        android:textSize="55dp"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>
