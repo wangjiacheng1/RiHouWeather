@@ -1,6 +1,7 @@
 package com.example.helloweather;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,22 +11,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.helloweather.bean.CurrentMsg;
 import com.google.gson.Gson;
 import com.qweather.sdk.bean.base.Code;
+import com.qweather.sdk.bean.weather.WeatherDailyBean;
 import com.qweather.sdk.bean.weather.WeatherNowBean;
 import com.qweather.sdk.view.QWeather;
-
-import static com.qweather.sdk.bean.base.Code.OK;
 
 public class CityWeatherFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "CityWeatherFragment";
 
-    TextView cityTv, tempTv, conditionTv, todayTextTv, tomorrowTextTv, nextTomorrowTextTv,
+    TextView cityTv, tempTv, conditionTv, todayTextTv, tomorrowTextTv, nextTextTv,
             todayMinTv, todayMaxTv, tomorrowMinTv, tomorrowMaxTv, nextMinTv, nextMaxTv;
     TextView dressIndexTv, sunIndexTv, coldIndexTv, umbrellaIndexTv, carIndexTv, exerciseIndexTv;
     ImageView todayIcon, tomorrowIcon, nextIcon;
@@ -49,6 +47,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     public void parseShowData(String city){
         //获得并解析数据
         Context context = getContext();
+        ApplicationInfo info = context.getApplicationInfo();
         QWeather.getWeatherNow(context, city, new QWeather.OnResultWeatherNowListener() {
             @Override
             public void onError(Throwable e) {
@@ -70,9 +69,52 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                     String status = String.valueOf(weatherBean.getCode());
                     Code code = Code.toEnum(status);
                     Log.i(TAG, "failed code: " + code);
+
                 }
+                WeatherNowBean.NowBaseBean now = weatherBean.getNow();
+                String currentTemp = now.getTemp();
+                String condition = now.getText();
+                tempTv.setText(currentTemp);
+                conditionTv.setText(condition);
             }
 
+        });
+        QWeather.getWeather3D(context, city, new QWeather.OnResultWeatherDailyListener() {
+            @Override
+            public void onError(Throwable e) {
+                Log.i(TAG, "getWeather onError: " + e);
+            }
+
+            @Override
+            public void onSuccess(WeatherDailyBean weatherDailyBean) {
+                Log.i(TAG, "getWeather onSuccess: " + new Gson().toJson(weatherDailyBean));
+                //先判断返回的status是否正确，当status正确时获取数据，若status不正确，可查看status对应的Code值找到原因
+                if (Code.OK.getCode().equalsIgnoreCase(String.valueOf(weatherDailyBean.getCode()))) {
+
+                } else {
+                    //在此查看返回数据失败的原因
+                    String status = String.valueOf(weatherDailyBean.getCode());
+                    Code code = Code.toEnum(status);
+                    Log.i(TAG, "failed code: " + code);
+
+                }
+
+                WeatherDailyBean.DailyBean today = weatherDailyBean.getDaily().get(0);
+                WeatherDailyBean.DailyBean tomorrow = weatherDailyBean.getDaily().get(1);
+                WeatherDailyBean.DailyBean next = weatherDailyBean.getDaily().get(2);
+                todayMinTv.setText(today.getTempMin() + "℃");
+                todayMaxTv.setText(today.getTempMax() + "℃");
+                todayTextTv.setText("今天 · " + today.getTextDay());
+                todayIcon.setImageResource(getResources().getIdentifier("i" + today.getIconDay(),"mipmap", info.packageName));
+                tomorrowMinTv.setText(tomorrow.getTempMin() + "℃");
+                tomorrowMaxTv.setText(tomorrow.getTempMax() + "℃");
+                tomorrowTextTv.setText(tomorrow.getTextDay());
+                tomorrowIcon.setImageResource(getResources().getIdentifier("i" + tomorrow.getIconDay(),"mipmap", info.packageName));
+                nextMinTv.setText(next.getTempMin() + "℃");
+                nextMaxTv.setText(next.getTempMax() + "℃");
+                nextTextTv.setText(next.getTextDay());
+                nextIcon.setImageResource(getResources().getIdentifier("i" + next.getIconDay(),"mipmap", info.packageName));
+            }
         });
     }
 
@@ -83,7 +125,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         conditionTv = view.findViewById(R.id.frag_tv_condition);
         todayTextTv = view.findViewById(R.id.frag_tv_today_text);
         tomorrowTextTv = view.findViewById(R.id.frag_tv_tomorrow_text);
-        nextTomorrowTextTv = view.findViewById(R.id.frag_tv_nextTomorrow_text);
+        nextTextTv = view.findViewById(R.id.frag_tv_nextTomorrow_text);
         todayMinTv = view.findViewById(R.id.frag_tv_today_min);
         todayMaxTv = view.findViewById(R.id.frag_tv_today_max);
         tomorrowMinTv = view.findViewById(R.id.frag_tv_tomorrow_min);
