@@ -3,6 +3,7 @@ package com.example.helloweather;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 import android.os.Bundle;
 import android.view.View;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (cityList.size() == 0){
             cityList.add("CN101010100");
+            cityList.add("CN101010200");
+            cityList.add("CN101010300");
         }
         //初始化viewPager页面
         initPager();
@@ -47,6 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainViewPager.setAdapter(adapter);
         //创建页面小圆点指示器
         initPoint();
+        //设置最后一个城市信息
+        mainViewPager.setCurrentItem(fragmentList.size() -1);
+        //设置viewpager监听
+        initPagerListener();
 
     }
 
@@ -82,6 +89,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initPoint(){
+        //创建小圆点，ViewPager页面指示器
+        for (int i = 0;i < fragmentList.size(); i++){
+            ImageView pointIv = new ImageView(this);
+            pointIv.setImageResource(R.mipmap.point0);
+            pointIv.setLayoutParams(new LinearLayout.LayoutParams(80,80));
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) pointIv.getLayoutParams();
+            layoutParams.setMargins(0,0,2,0);
+            imgList.add(pointIv);
+            pointLayout.addView(pointIv);
+        }
+        imgList.get(imgList.size() -1).setImageResource(R.mipmap.point1);
+    }
 
+    public void initPagerListener(){
+        mainViewPager.addOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                for (int i =0; i < imgList.size(); i++){
+                    imgList.get(i).setImageResource(R.mipmap.point0);
+                }
+                imgList.get(position).setImageResource(R.mipmap.point1);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }
