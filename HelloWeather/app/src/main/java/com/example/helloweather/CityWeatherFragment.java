@@ -14,8 +14,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.helloweather.database.DataBaseBean;
 import com.google.gson.Gson;
 import com.qweather.sdk.bean.base.Code;
+import com.qweather.sdk.bean.geo.GeoBean;
 import com.qweather.sdk.bean.weather.WeatherDailyBean;
 import com.qweather.sdk.bean.weather.WeatherNowBean;
 import com.qweather.sdk.view.QWeather;
@@ -29,6 +31,9 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     ImageView todayIcon, tomorrowIcon, nextIcon;
     RelativeLayout todayLayout, tomorrowLayout, nextLayout;
 
+    DataBaseBean bean;
+    Context context;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,29 +42,32 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         initView(view);
         //通过activity传值当前城市给fragment
         Bundle bundle = getArguments();
-        String city = bundle.getString("city","CN101010100");
+        String cityName = bundle.getString("city","北京");
+        String cityCode = "CN" + getCityCode(cityName);
+        Log.d(TAG,"cityCode:"+cityCode);
 
-        parseShowData(city);
+        bean = new DataBaseBean();
+        bean.setCityCode(cityCode);
+
+        updateData(cityCode);
+        showDate();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Bundle bundle = getArguments();
-        String city = bundle.getString("city","CN101010100");
-        parseShowData(city);
+        showDate();
     }
 
-    //解析展示数据
-    public void parseShowData(String city){
+    //更新数据
+    public void updateData(String cityCode){
         //获得并解析数据
-        Context context = getContext();
-        ApplicationInfo info = context.getApplicationInfo();
-        QWeather.getWeatherNow(context, city, new QWeather.OnResultWeatherNowListener() {
+
+        QWeather.getWeatherNow(context, cityCode, new QWeather.OnResultWeatherNowListener() {
             @Override
             public void onError(Throwable e) {
-                Log.i(TAG, "getWeather onError: " + e);
+                Log.i(TAG, "getNowWeather onError: " + e);
             }
 
             @Override
@@ -68,10 +76,9 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                 //先判断返回的status是否正确，当status正确时获取数据，若status不正确，可查看status对应的Code值找到原因
                 if (Code.OK == weatherBean.getCode()) {
                     WeatherNowBean.NowBaseBean now = weatherBean.getNow();
-                    String currentTemp = now.getTemp();
-                    String condition = now.getText();
-                    tempTv.setText(currentTemp);
-                    conditionTv.setText(condition);
+                    bean.setCurTemp(now.getTemp());
+                    bean.setCondition(now.getText());
+
                 } else {
                     //在此查看返回数据失败的原因
                     String status = String.valueOf(weatherBean.getCode());
@@ -82,10 +89,10 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
             }
 
         });
-        QWeather.getWeather3D(context, city, new QWeather.OnResultWeatherDailyListener() {
+        QWeather.getWeather3D(context, cityCode, new QWeather.OnResultWeatherDailyListener() {
             @Override
             public void onError(Throwable e) {
-                Log.i(TAG, "getWeather onError: " + e);
+                Log.i(TAG, "get3DWeather onError: " + e);
             }
 
             @Override
@@ -97,18 +104,20 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                     WeatherDailyBean.DailyBean today = weatherDailyBean.getDaily().get(0);
                     WeatherDailyBean.DailyBean tomorrow = weatherDailyBean.getDaily().get(1);
                     WeatherDailyBean.DailyBean next = weatherDailyBean.getDaily().get(2);
-                    todayMinTv.setText(today.getTempMin() + "℃");
-                    todayMaxTv.setText(today.getTempMax() + "℃");
-                    todayTextTv.setText("今天 · " + today.getTextDay());
-                    todayIcon.setImageResource(getResources().getIdentifier("i" + today.getIconDay(),"mipmap", info.packageName));
-                    tomorrowMinTv.setText(tomorrow.getTempMin() + "℃");
-                    tomorrowMaxTv.setText(tomorrow.getTempMax() + "℃");
-                    tomorrowTextTv.setText(tomorrow.getTextDay());
-                    tomorrowIcon.setImageResource(getResources().getIdentifier("i" + tomorrow.getIconDay(),"mipmap", info.packageName));
-                    nextMinTv.setText(next.getTempMin() + "℃");
-                    nextMaxTv.setText(next.getTempMax() + "℃");
-                    nextTextTv.setText(next.getTextDay());
-                    nextIcon.setImageResource(getResources().getIdentifier("i" + next.getIconDay(),"mipmap", info.packageName));
+
+                    bean.setTodayIcon(today.getIconDay());
+                    bean.setTodayMinTemp(today.getTempMin());
+                    bean.setTodayMaxTemp(today.getTempMax());
+                    bean.setTodayCondition(today.getTextDay());
+                    bean.setTomorrowIcon(tomorrow.getIconDay());
+                    bean.setTomorrowMinTemp(tomorrow.getTempMin());
+                    bean.setTomorrowMaxTemp(tomorrow.getTempMax());
+                    bean.setTomorrowCondition(tomorrow.getTextDay());
+                    bean.setNextIcon(next.getIconDay());
+                    bean.setNextMinTemp(next.getTempMin());
+                    bean.setNextMaxTemp(next.getTempMax());
+                    bean.setNextCondition(next.getTextDay());
+
                 } else {
                     //在此查看返回数据失败的原因
                     String status = String.valueOf(weatherDailyBean.getCode());
@@ -119,6 +128,54 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
 
             }
         });
+    }
+
+    //展示数据
+    public void showDate(){
+        context = getContext();
+        ApplicationInfo info = context.getApplicationInfo();
+        Log.d(TAG,"showDate: "+bean.toString());
+
+        tempTv.setText(bean.getCurTemp());
+        conditionTv.setText(bean.getCondition());
+
+        todayMinTv.setText(bean.getTodayMinTemp() + "℃");
+        todayMaxTv.setText(bean.getTodayMaxTemp() + "℃");
+        todayTextTv.setText("今天 · " + bean.getTodayCondition());
+        todayIcon.setImageResource(getResources().getIdentifier("i" + bean.getTodayIcon(),"mipmap", info.packageName));
+        tomorrowMinTv.setText(bean.getTomorrowMinTemp() + "℃");
+        tomorrowMaxTv.setText(bean.getTomorrowMaxTemp() + "℃");
+        tomorrowTextTv.setText(bean.getTomorrowCondition());
+        tomorrowIcon.setImageResource(getResources().getIdentifier("i" + bean.getTomorrowIcon(),"mipmap", info.packageName));
+        nextMinTv.setText(bean.getNextMinTemp() + "℃");
+        nextMaxTv.setText(bean.getNextMaxTemp() + "℃");
+        nextTextTv.setText(bean.getNextCondition());
+        nextIcon.setImageResource(getResources().getIdentifier("i" + bean.getNextIcon(),"mipmap", info.packageName));
+    }
+
+    //解析城市
+    public String getCityCode(String cityName){
+        context = getContext();
+        final String[] cityCode = new String[1];
+        QWeather.getGeoCityLookup(context, cityName, new QWeather.OnResultGeoListener(){
+            @Override
+            public void onError(Throwable e) {
+                Log.i(TAG, "getLocation onError: " + e);
+            }
+            @Override
+            public void onSuccess(GeoBean geoBean){
+                if (Code.OK == geoBean.getCode()){
+                    cityCode[0] = geoBean.getLocationBean().get(0).getId();
+                    Log.d(TAG,"getCityCode: " + cityCode[0]);
+                }else {
+                    //在此查看返回数据失败的原因
+                    String status = String.valueOf(geoBean.getCode());
+                    Code code = Code.toEnum(status);
+                    Log.i(TAG, "failed code: " + code);
+                }
+            }
+        });
+        return cityCode[0];
     }
 
     private void initView(View view){

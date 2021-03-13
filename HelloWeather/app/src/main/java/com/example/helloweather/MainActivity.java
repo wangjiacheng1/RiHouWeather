@@ -5,10 +5,13 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.example.helloweather.database.DBManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     CityFragmentAdapter adapter;
 
+    MyTask mTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,24 +41,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
         fragmentList = new ArrayList<>();
-        cityList = new ArrayList<>();
-        imgList = new ArrayList<>();
+        mTask = new MyTask();
+        mTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        cityList = DBManager.queryAllCityName();
 
-        if (cityList.size() == 0){
-            cityList.add("CN101010100");
-            cityList.add("CN101010200");
-            cityList.add("CN101010300");
-        }
-        //初始化viewPager页面
-        initPager();
-        adapter = new CityFragmentAdapter(getSupportFragmentManager(), fragmentList);
-        mainViewPager.setAdapter(adapter);
-        //创建页面小圆点指示器
-        initPoint();
-        //设置最后一个城市信息
-        mainViewPager.setCurrentItem(fragmentList.size() -1);
-        //设置viewpager监听
-        initPagerListener();
 
     }
 
@@ -123,4 +114,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    public class MyTask extends AsyncTask<Void, Integer, List<String>>{
+
+        @Override
+        protected List<String> doInBackground(Void... voids) {
+            List<String> cityNameList = DBManager.queryAllCityName();
+            return cityNameList;
+        }
+
+        @Override
+        protected void onPostExecute(List<String> list){
+            super.onPostExecute(list);
+            cityList = list;
+
+            if (cityList.size() == 0){
+                cityList.add("北京");
+            }
+
+            imgList = new ArrayList<>();
+
+            //初始化viewPager页面
+            initPager();
+            adapter = new CityFragmentAdapter(getSupportFragmentManager(), fragmentList);
+            mainViewPager.setAdapter(adapter);
+            //创建页面小圆点指示器
+            initPoint();
+            //设置最后一个城市信息
+            mainViewPager.setCurrentItem(fragmentList.size() -1);
+            //设置viewpager监听
+            initPagerListener();
+        }
+    }
+
 }

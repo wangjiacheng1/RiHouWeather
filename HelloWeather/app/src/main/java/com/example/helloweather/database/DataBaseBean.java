@@ -208,4 +208,33 @@ public class DataBaseBean {
     public void setNextCondition(String nextCondition) {
         this.nextCondition = nextCondition;
     }
+
+    @Override
+    public String toString() {
+        return "DataBaseBean{" +
+                "id=" + id +
+                ", cityName='" + cityName + '\'' +
+                ", cityCode='" + cityCode + '\'' +
+                ", condition='" + condition + '\'' +
+                ", curTemp='" + curTemp + '\'' +
+                ", dressIndex='" + dressIndex + '\'' +
+                ", sunIndex='" + sunIndex + '\'' +
+                ", coldIndex='" + coldIndex + '\'' +
+                ", umbrellaIndex='" + umbrellaIndex + '\'' +
+                ", carIndex='" + carIndex + '\'' +
+                ", exerciseIndex='" + exerciseIndex + '\'' +
+                ", todayIcon='" + todayIcon + '\'' +
+                ", todayMinTemp='" + todayMinTemp + '\'' +
+                ", todayMaxTemp='" + todayMaxTemp + '\'' +
+                ", todayCondition='" + todayCondition + '\'' +
+                ", tomorrowIcon='" + tomorrowIcon + '\'' +
+                ", tomorrowMinTemp='" + tomorrowMinTemp + '\'' +
+                ", tomorrowMaxTemp='" + tomorrowMaxTemp + '\'' +
+                ", tomorrowCondition='" + tomorrowCondition + '\'' +
+                ", nextIcon='" + nextIcon + '\'' +
+                ", nextMinTemp='" + nextMinTemp + '\'' +
+                ", nextMaxTemp='" + nextMaxTemp + '\'' +
+                ", nextCondition='" + nextCondition + '\'' +
+                '}';
+    }
 }
