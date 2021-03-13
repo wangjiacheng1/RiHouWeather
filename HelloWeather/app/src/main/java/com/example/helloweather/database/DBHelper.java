@@ -12,7 +12,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //创建表
-        String sql = "create table info(id integer primary key autoincrement,cityName varchar(20), cityCode varchar(25), condition varchar(20), curTemp varchar(5), " +
+        String sql = "create table weather (id integer primary key autoincrement, cityName varchar(20), cityCode varchar(25), condition varchar(20), curTemp varchar(5), " +
                 "dressIndex varchar(20), sunIndex varchar(20), coldIndex varchar(20), umbrellaIndex varchar(20), carIndex varchar(20), exerciseIndex varchar(20), " +
                 "todayIcon varchar(4), todayMinTemp varchar(4), todayMaxTemp varchar(4), todayCondition varchar(20), " +
                 "tomorrowIcon varchar(4), tomorrowMinTemp varchar(4), tomorrowMaxTemp varchar(4), tomorrowCondition varchar(20), " +
