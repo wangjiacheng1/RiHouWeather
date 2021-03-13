@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +34,9 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     ImageView todayIcon, tomorrowIcon, nextIcon;
     RelativeLayout todayLayout, tomorrowLayout, nextLayout;
 
-    DataBaseBean bean;
+    DataBaseBean bean = new DataBaseBean();
     Context context;
+    Handler mHandler;
 
 
     @Override
@@ -43,14 +47,28 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         //通过activity传值当前城市给fragment
         Bundle bundle = getArguments();
         String cityName = bundle.getString("city","北京");
-        String cityCode = "CN" + getCityCode(cityName);
-        Log.d(TAG,"cityCode:"+cityCode);
 
-        bean = new DataBaseBean();
-        bean.setCityCode(cityCode);
+        getCityCode(cityName);
+        mHandler = new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what){
+                    case 0:
+                        String cityCode = "CN" + msg.obj;
+                        Log.d(TAG,"cityCode:"+cityCode);
+                        bean.setCityCode(cityCode);
+                        updateData(cityCode);
+                    case 1:
+                    case 2:
+                        showDate();
+                        break;
+                }
+            }
+        };
 
-        updateData(cityCode);
-        showDate();
+
+
         return view;
     }
 
@@ -78,7 +96,10 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                     WeatherNowBean.NowBaseBean now = weatherBean.getNow();
                     bean.setCurTemp(now.getTemp());
                     bean.setCondition(now.getText());
-
+                    //网络获得数据是异步进行的，这里得到后要向主线程传递信息
+                    Message msg = new Message();
+                    msg.what = 1;
+                    mHandler.sendMessage(msg);
                 } else {
                     //在此查看返回数据失败的原因
                     String status = String.valueOf(weatherBean.getCode());
@@ -117,6 +138,10 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                     bean.setNextMinTemp(next.getTempMin());
                     bean.setNextMaxTemp(next.getTempMax());
                     bean.setNextCondition(next.getTextDay());
+                    //网络获得数据是异步进行的，这里得到后要向主线程传递信息
+                    Message msg = new Message();
+                    msg.what = 2;
+                    mHandler.sendMessage(msg);
 
                 } else {
                     //在此查看返回数据失败的原因
@@ -154,7 +179,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     }
 
     //解析城市
-    public String getCityCode(String cityName){
+    public void getCityCode(String cityName){
         context = getContext();
         final String[] cityCode = new String[1];
         QWeather.getGeoCityLookup(context, cityName, new QWeather.OnResultGeoListener(){
@@ -165,8 +190,13 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
             @Override
             public void onSuccess(GeoBean geoBean){
                 if (Code.OK == geoBean.getCode()){
-                    cityCode[0] = geoBean.getLocationBean().get(0).getId();
-                    Log.d(TAG,"getCityCode: " + cityCode[0]);
+                    String cityCode = geoBean.getLocationBean().get(0).getId();
+                    //网络获得数据是异步进行的，这里得到后要向主线程传递信息
+                    Message msg = new Message();
+                    msg.obj = cityCode;
+                    msg.what = 0;
+                    mHandler.sendMessage(msg);
+                    Log.d(TAG,"getCityCode: " + cityCode);
                 }else {
                     //在此查看返回数据失败的原因
                     String status = String.valueOf(geoBean.getCode());
@@ -175,7 +205,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                 }
             }
         });
-        return cityCode[0];
+        Log.d(TAG,"cityCode at out:" + cityCode[0]);
     }
 
     private void initView(View view){
