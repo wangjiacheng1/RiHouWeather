@@ -37,7 +37,6 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
 
     DataBaseBean bean = new DataBaseBean();
     Context context;
-    Handler mHandler;
     String cityCode;
 
 
@@ -54,24 +53,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
 
 
         getCityCode(cityName);
-        mHandler = new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                switch (msg.what){
-                    case 0:
-                        cityCode = "CN" + msg.obj;
-                        Log.d(TAG,"cityCode:"+cityCode);
-                        bean.setCityCode(cityCode);
-                        updateData(cityCode);
-                    case 1:
-                    case 2:
-                        showDate(cityCode);
-                        updateCity(cityCode);
-                        break;
-                }
-            }
-        };
+
 
         return view;
     }
@@ -79,7 +61,6 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
-        showDate(cityCode);
     }
 
     //更新数据
@@ -100,10 +81,8 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                     WeatherNowBean.NowBaseBean now = weatherBean.getNow();
                     bean.setCurTemp(now.getTemp());
                     bean.setCondition(now.getText());
-                    //网络获得数据是异步进行的，这里得到后要向主线程传递信息
-                    Message msg = new Message();
-                    msg.what = 1;
-                    mHandler.sendMessage(msg);
+                    //获取未来三天天气
+                    getWeather3D(cityCode);
                 } else {
                     //在此查看返回数据失败的原因
                     String status = String.valueOf(weatherBean.getCode());
@@ -114,6 +93,12 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
             }
 
         });
+    }
+
+    /**
+     * 获取未来三天天气
+     */
+    private void getWeather3D(String cityCode){
         QWeather.getWeather3D(context, cityCode, new QWeather.OnResultWeatherDailyListener() {
             @Override
             public void onError(Throwable e) {
@@ -142,10 +127,10 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                     bean.setNextMinTemp(next.getTempMin());
                     bean.setNextMaxTemp(next.getTempMax());
                     bean.setNextCondition(next.getTextDay());
-                    //网络获得数据是异步进行的，这里得到后要向主线程传递信息
-                    Message msg = new Message();
-                    msg.what = 2;
-                    mHandler.sendMessage(msg);
+                    //展示数据
+                    showDate(cityCode);
+                    //存进数据库
+                    updateCity(cityCode);
 
                 } else {
                     //在此查看返回数据失败的原因
@@ -157,8 +142,8 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
 
             }
         });
-    }
 
+    }
     //展示数据
     public void showDate(String cityCode){
         context = getContext();
@@ -197,12 +182,11 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
             public void onSuccess(GeoBean geoBean){
                 if (Code.OK == geoBean.getCode()){
                     String cityCode = geoBean.getLocationBean().get(0).getId();
-                    //网络获得数据是异步进行的，这里得到后要向主线程传递信息
-                    Message msg = new Message();
-                    msg.obj = cityCode;
-                    msg.what = 0;
-                    mHandler.sendMessage(msg);
                     Log.d(TAG,"getCityCode: " + cityCode);
+
+                    bean.setCityCode(cityCode);
+                    //获取当前天气
+                    updateData(cityCode);
                 }else {
                     //在此查看返回数据失败的原因
                     String status = String.valueOf(geoBean.getCode());
