@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.helloweather.database.DBManager;
 import com.example.helloweather.database.DataBaseBean;
 import com.google.gson.Gson;
 import com.qweather.sdk.bean.base.Code;
@@ -37,6 +38,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     DataBaseBean bean = new DataBaseBean();
     Context context;
     Handler mHandler;
+    String cityCode;
 
 
     @Override
@@ -47,6 +49,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         //通过activity传值当前城市给fragment
         Bundle bundle = getArguments();
         String cityName = bundle.getString("city","北京");
+        DBManager.addCity(cityName);
 
         getCityCode(cityName);
         mHandler = new Handler(){
@@ -55,13 +58,14 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                 super.handleMessage(msg);
                 switch (msg.what){
                     case 0:
-                        String cityCode = "CN" + msg.obj;
+                        cityCode = "CN" + msg.obj;
                         Log.d(TAG,"cityCode:"+cityCode);
                         bean.setCityCode(cityCode);
                         updateData(cityCode);
                     case 1:
                     case 2:
-                        showDate();
+                        showDate(cityCode);
+                        updateCity(cityCode);
                         break;
                 }
             }
@@ -75,7 +79,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
-        showDate();
+        showDate(cityCode);
     }
 
     //更新数据
@@ -156,26 +160,28 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     }
 
     //展示数据
-    public void showDate(){
+    public void showDate(String cityCode){
         context = getContext();
         ApplicationInfo info = context.getApplicationInfo();
+        DataBaseBean cityShow = DBManager.queryByCityCode(cityCode);
         Log.d(TAG,"showDate: "+bean.toString());
 
-        tempTv.setText(bean.getCurTemp());
-        conditionTv.setText(bean.getCondition());
+        cityTv.setText(cityShow.getCityName());
+        tempTv.setText(cityShow.getCurTemp());
+        conditionTv.setText(cityShow.getCondition());
 
-        todayMinTv.setText(bean.getTodayMinTemp() + "℃");
-        todayMaxTv.setText(bean.getTodayMaxTemp() + "℃");
-        todayTextTv.setText("今天 · " + bean.getTodayCondition());
-        todayIcon.setImageResource(getResources().getIdentifier("i" + bean.getTodayIcon(),"mipmap", info.packageName));
-        tomorrowMinTv.setText(bean.getTomorrowMinTemp() + "℃");
-        tomorrowMaxTv.setText(bean.getTomorrowMaxTemp() + "℃");
-        tomorrowTextTv.setText(bean.getTomorrowCondition());
-        tomorrowIcon.setImageResource(getResources().getIdentifier("i" + bean.getTomorrowIcon(),"mipmap", info.packageName));
-        nextMinTv.setText(bean.getNextMinTemp() + "℃");
-        nextMaxTv.setText(bean.getNextMaxTemp() + "℃");
-        nextTextTv.setText(bean.getNextCondition());
-        nextIcon.setImageResource(getResources().getIdentifier("i" + bean.getNextIcon(),"mipmap", info.packageName));
+        todayMinTv.setText(cityShow.getTodayMinTemp() + "℃");
+        todayMaxTv.setText(cityShow.getTodayMaxTemp() + "℃");
+        todayTextTv.setText("今天 · " + cityShow.getTodayCondition());
+        todayIcon.setImageResource(getResources().getIdentifier("i" + cityShow.getTodayIcon(),"mipmap", info.packageName));
+        tomorrowMinTv.setText(cityShow.getTomorrowMinTemp() + "℃");
+        tomorrowMaxTv.setText(cityShow.getTomorrowMaxTemp() + "℃");
+        tomorrowTextTv.setText(cityShow.getTomorrowCondition());
+        tomorrowIcon.setImageResource(getResources().getIdentifier("i" + cityShow.getTomorrowIcon(),"mipmap", info.packageName));
+        nextMinTv.setText(cityShow.getNextMinTemp() + "℃");
+        nextMaxTv.setText(cityShow.getNextMaxTemp() + "℃");
+        nextTextTv.setText(cityShow.getNextCondition());
+        nextIcon.setImageResource(getResources().getIdentifier("i" + cityShow.getNextIcon(),"mipmap", info.packageName));
     }
 
     //解析城市
@@ -252,5 +258,15 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
             case R.id.frag_layout_nextTomorrow:
                 break;
         }
+    }
+
+    public void updateCity(String cityCode){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DBManager.updateCityByCode(cityCode, bean);
+            }
+        }).start();
+
     }
 }

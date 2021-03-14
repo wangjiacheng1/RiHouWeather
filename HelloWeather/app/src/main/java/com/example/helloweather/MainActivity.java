@@ -5,12 +5,14 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.helloweather.city_manager.CityManagerActivity;
 import com.example.helloweather.database.DBManager;
 
 import java.util.ArrayList;
@@ -60,12 +62,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
         switch (v.getId()){
             case R.id.main_iv_add:
+                intent.setClass(this, CityManagerActivity.class);
+
                 break;
             case R.id.main_iv_more:
                 break;
         }
+        startActivity(intent);
     }
 
     public void initPager(){

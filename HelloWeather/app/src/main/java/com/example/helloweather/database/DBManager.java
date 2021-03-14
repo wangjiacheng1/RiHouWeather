@@ -50,7 +50,7 @@ public class DBManager {
     }
 
     //新增城市信息
-    public static long addCity(DataBaseBean bean){
+    public static long addCityComplete(DataBaseBean bean){
         ContentValues values = new ContentValues();
         values.put("cityName",bean.getCityName());
         values.put("cityCode",bean.getCityCode());
@@ -76,8 +76,15 @@ public class DBManager {
         values.put("nextCondition",bean.getNextCondition());
 
         long cur = database.insert(TABLE_NAME,null,values);
-        Log.d(TAG,"addCity cur: " + cur);
+        Log.d(TAG,"addCityComplete cur: " + cur);
         return cur;
+    }
+
+    public static void addCity(String cityName){
+        ContentValues values = new ContentValues();
+        values.put("cityName",cityName);
+        long cur = database.insert(TABLE_NAME,null,values);
+        Log.d(TAG,"addCity cur: " + cur);
     }
 
     //删除城市
@@ -142,5 +149,12 @@ public class DBManager {
         bean.setNextMinTemp(cursor.getString(cursor.getColumnIndex("nextMinTemp")));
         bean.setNextMaxTemp(cursor.getString(cursor.getColumnIndex("nextMaxTemp")));
         return bean;
+    }
+
+    //存储城市天气最多存储五个
+    public static int getCityCount(){
+        Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
+        int count = cursor.getCount();
+        return count;
     }
 }

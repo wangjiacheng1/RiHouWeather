@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.helloweather">
-    <!-- 获取网络权限 -->
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".UniteApp"
@@ -13,7 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HelloWeather"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CityManagerActivity"></activity>
+        <activity android:name=".city_manager.DeleteCityActivity"></activity>
+        <activity android:name=".city_manager.SearchCityActivity" />
+        <activity android:name=".city_manager.CityManagerActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,5 +22,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
