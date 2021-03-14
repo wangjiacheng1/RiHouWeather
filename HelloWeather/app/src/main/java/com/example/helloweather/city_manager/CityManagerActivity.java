@@ -21,8 +21,9 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
 
     ImageView backIv, deleteIv;
     SearchView searchView;
-    ListView listView;
-    List<DataBaseBean> mDates;
+    ListView cityLv;
+    List<DataBaseBean> mDatas;
+    private CityManagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +33,30 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().hide();
 
         initView();
-        mDates = new ArrayList<>();
+        mDatas = new ArrayList<>();
         //设置设配器
-
+        adapter = new CityManagerAdapter(this,mDatas);
+        cityLv.setAdapter(adapter);
 
     }
+
+    /**
+     * 获取数据源中新的信息，添加到原有数据源当中
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        List<DataBaseBean> list = DBManager.queryAllInfo();
+        mDatas.clear();
+        mDatas.addAll(list);
+        adapter.notifyDataSetChanged();
+    }
+
     public void initView(){
         backIv.findViewById(R.id.search_iv_back);
         deleteIv.findViewById(R.id.search_iv_del);
         searchView.findViewById(R.id.search_searchSv);
-        listView.findViewById(R.id.search_Lv);
+        cityLv.findViewById(R.id.search_Lv);
 
         backIv.setOnClickListener(this);
         deleteIv.setOnClickListener(this);

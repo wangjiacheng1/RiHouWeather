@@ -46,10 +46,12 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_city_weather, container, false);
         initView(view);
+        context = getContext();
         //通过activity传值当前城市给fragment
         Bundle bundle = getArguments();
         String cityName = bundle.getString("city","北京");
-        DBManager.addCity(cityName);
+        bean.setCityName(cityName);
+
 
         getCityCode(cityName);
         mHandler = new Handler(){
@@ -70,8 +72,6 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                 }
             }
         };
-
-
 
         return view;
     }
@@ -163,25 +163,25 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     public void showDate(String cityCode){
         context = getContext();
         ApplicationInfo info = context.getApplicationInfo();
-        DataBaseBean cityShow = DBManager.queryByCityCode(cityCode);
+//        DataBaseBean cityShow = DBManager.queryByCityCode(cityCode);
         Log.d(TAG,"showDate: "+bean.toString());
 
-        cityTv.setText(cityShow.getCityName());
-        tempTv.setText(cityShow.getCurTemp());
-        conditionTv.setText(cityShow.getCondition());
+        cityTv.setText(bean.getCityName());
+        tempTv.setText(bean.getCurTemp());
+        conditionTv.setText(bean.getCondition());
 
-        todayMinTv.setText(cityShow.getTodayMinTemp() + "℃");
-        todayMaxTv.setText(cityShow.getTodayMaxTemp() + "℃");
-        todayTextTv.setText("今天 · " + cityShow.getTodayCondition());
-        todayIcon.setImageResource(getResources().getIdentifier("i" + cityShow.getTodayIcon(),"mipmap", info.packageName));
-        tomorrowMinTv.setText(cityShow.getTomorrowMinTemp() + "℃");
-        tomorrowMaxTv.setText(cityShow.getTomorrowMaxTemp() + "℃");
-        tomorrowTextTv.setText(cityShow.getTomorrowCondition());
-        tomorrowIcon.setImageResource(getResources().getIdentifier("i" + cityShow.getTomorrowIcon(),"mipmap", info.packageName));
-        nextMinTv.setText(cityShow.getNextMinTemp() + "℃");
-        nextMaxTv.setText(cityShow.getNextMaxTemp() + "℃");
-        nextTextTv.setText(cityShow.getNextCondition());
-        nextIcon.setImageResource(getResources().getIdentifier("i" + cityShow.getNextIcon(),"mipmap", info.packageName));
+        todayMinTv.setText(bean.getTodayMinTemp() + "℃");
+        todayMaxTv.setText(bean.getTodayMaxTemp() + "℃");
+        todayTextTv.setText("今天 · " + bean.getTodayCondition());
+        todayIcon.setImageResource(getResources().getIdentifier("i" + bean.getTodayIcon(),"mipmap", info.packageName));
+        tomorrowMinTv.setText(bean.getTomorrowMinTemp() + "℃");
+        tomorrowMaxTv.setText(bean.getTomorrowMaxTemp() + "℃");
+        tomorrowTextTv.setText("明天 · " + bean.getTomorrowCondition());
+        tomorrowIcon.setImageResource(getResources().getIdentifier("i" + bean.getTomorrowIcon(),"mipmap", info.packageName));
+        nextMinTv.setText(bean.getNextMinTemp() + "℃");
+        nextMaxTv.setText(bean.getNextMaxTemp() + "℃");
+        nextTextTv.setText("后天 · " + bean.getNextCondition());
+        nextIcon.setImageResource(getResources().getIdentifier("i" + bean.getNextIcon(),"mipmap", info.packageName));
     }
 
     //解析城市

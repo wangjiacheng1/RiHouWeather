@@ -36,6 +36,40 @@ public class DBManager {
         return cityList;
     }
 
+    //查询数据库中的所有城市的所有信息
+    public static List<DataBaseBean> queryAllInfo(){
+        Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
+        List<DataBaseBean> cityList = new ArrayList<DataBaseBean>();
+        while (cursor.moveToNext()){
+            DataBaseBean bean = new DataBaseBean();
+            bean.setId(cursor.getInt(cursor.getColumnIndex("id")));
+            bean.setCityName(cursor.getString(cursor.getColumnIndex("cityName")));
+            bean.setCityCode(cursor.getString(cursor.getColumnIndex("cityCode")));
+            bean.setCurTemp(cursor.getString(cursor.getColumnIndex("curTemp")));
+            bean.setCondition(cursor.getString(cursor.getColumnIndex("condition")));
+            bean.setDressIndex(cursor.getString(cursor.getColumnIndex("dressIndex")));
+            bean.setColdIndex(cursor.getString(cursor.getColumnIndex("coldIndex")));
+            bean.setSunIndex(cursor.getString(cursor.getColumnIndex("sunIndex")));
+            bean.setCarIndex(cursor.getString(cursor.getColumnIndex("carIndex")));
+            bean.setExerciseIndex(cursor.getString(cursor.getColumnIndex("exerciseIndex")));
+            bean.setUmbrellaIndex(cursor.getString(cursor.getColumnIndex("umbrellaIndex")));
+            bean.setTodayIcon(cursor.getString(cursor.getColumnIndex("todayIcon")));
+            bean.setTodayCondition(cursor.getString(cursor.getColumnIndex("todayCondition")));
+            bean.setTodayMinTemp(cursor.getString(cursor.getColumnIndex("todayMinTemp")));
+            bean.setTodayMaxTemp(cursor.getString(cursor.getColumnIndex("todayMaxTemp")));
+            bean.setTomorrowIcon(cursor.getString(cursor.getColumnIndex("tomorrowIcon")));
+            bean.setTomorrowCondition(cursor.getString(cursor.getColumnIndex("tomorrowCondition")));
+            bean.setTomorrowMinTemp(cursor.getString(cursor.getColumnIndex("tomorrowMinTemp")));
+            bean.setTomorrowMaxTemp(cursor.getString(cursor.getColumnIndex("tomorrowMaxTemp")));
+            bean.setNextIcon(cursor.getString(cursor.getColumnIndex("nextIcon")));
+            bean.setNextCondition(cursor.getString(cursor.getColumnIndex("nextCondition")));
+            bean.setNextMinTemp(cursor.getString(cursor.getColumnIndex("nextMinTemp")));
+            bean.setNextMaxTemp(cursor.getString(cursor.getColumnIndex("nextMaxTemp")));
+            cityList.add(bean);
+        }
+        return cityList;
+    }
+
     //查询数据库中所有城市代码，以防重复添加
     public static Set<String> queryAllCityCode(){
         Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
