@@ -26,6 +26,9 @@ import com.qweather.sdk.bean.weather.WeatherDailyBean;
 import com.qweather.sdk.bean.weather.WeatherNowBean;
 import com.qweather.sdk.view.QWeather;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class CityWeatherFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "CityWeatherFragment";
 
@@ -38,6 +41,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
     DataBaseBean bean = new DataBaseBean();
     Context context;
     String cityCode;
+    static ExecutorService mExecutor = Executors.newCachedThreadPool();
 
 
     @Override
@@ -253,13 +257,18 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    public void updateCity(String cityCode){
+    public void updateCity(final String cityCode){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 DBManager.updateCityByCode(cityCode, bean);
             }
         }).start();
+    }
 
+    @Override
+    public void onDestroy() {
+        mExecutor.shutdownNow();
+        super.onDestroy();
     }
 }

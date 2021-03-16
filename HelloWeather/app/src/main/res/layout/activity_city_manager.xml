@@ -33,7 +33,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginLeft="20dp"
         android:text="城市管理"
-        android:textSize="30dp"
+        android:textSize="28dp"
         android:textColor="@color/black"
         android:layout_below="@+id/search_top_ly"/>
 

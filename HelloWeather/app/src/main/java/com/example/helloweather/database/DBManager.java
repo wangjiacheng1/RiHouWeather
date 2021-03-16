@@ -114,9 +114,9 @@ public class DBManager {
         return cur;
     }
 
-    public static void addCity(String cityName){
+    public static void addCity(String cityCode){
         ContentValues values = new ContentValues();
-        values.put("cityName",cityName);
+        values.put("cityCode",cityCode);
         long cur = database.insert(TABLE_NAME,null,values);
         Log.d(TAG,"addCity cur: " + cur);
     }
@@ -130,6 +130,7 @@ public class DBManager {
     //根据城市代码，更新数据
     public static void updateCityByCode(String cityCode, DataBaseBean bean){
         ContentValues values = new ContentValues();
+        values.put("cityName",bean.getCityName());
         values.put("condition",bean.getCondition());
         values.put("curTemp",bean.getCurTemp());
         values.put("dressIndex",bean.getDressIndex());

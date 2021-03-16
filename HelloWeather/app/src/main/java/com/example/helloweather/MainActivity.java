@@ -136,11 +136,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if (cityList.size() == 0){
                 cityList.add("北京");
-                DBManager.addCity("北京");
+                DBManager.addCity("CN101010100");
                 cityList.add("吉林");
-                DBManager.addCity("吉林");
+                DBManager.addCity("CN101060201");
                 cityList.add("石家庄");
-                DBManager.addCity("石家庄");
+                DBManager.addCity("CN101090101");
             }
 
             imgList = new ArrayList<>();
