@@ -53,10 +53,10 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void initView(){
-        backIv.findViewById(R.id.search_iv_back);
-        deleteIv.findViewById(R.id.search_iv_del);
-        searchView.findViewById(R.id.search_searchSv);
-        cityLv.findViewById(R.id.search_Lv);
+        backIv = findViewById(R.id.search_iv_back);
+        deleteIv = findViewById(R.id.search_iv_del);
+        searchView = findViewById(R.id.search_searchSv);
+        cityLv = findViewById(R.id.search_Lv);
 
         backIv.setOnClickListener(this);
         deleteIv.setOnClickListener(this);
