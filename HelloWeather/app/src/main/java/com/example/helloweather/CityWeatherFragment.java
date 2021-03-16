@@ -190,7 +190,7 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
             @Override
             public void onSuccess(GeoBean geoBean){
                 if (Code.OK == geoBean.getCode()){
-                    String cityCode = geoBean.getLocationBean().get(0).getId();
+                    String cityCode = "CN" + geoBean.getLocationBean().get(0).getId();
                     Log.d(TAG,"getCityCode: " + cityCode);
 
                     bean.setCityCode(cityCode);
