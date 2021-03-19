@@ -12,5 +12,7 @@ public class SearchCityActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_city);
+        //隐藏toolbar
+        getSupportActionBar().hide();
     }
 }

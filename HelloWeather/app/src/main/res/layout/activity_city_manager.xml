@@ -7,18 +7,18 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/search_top_ly"
+        android:id="@+id/manager_top_ly"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:id="@+id/search_iv_back"
+            android:id="@+id/manager_iv_back"
             android:layout_width="40dp"
             android:layout_height="25dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:src="@mipmap/back"/>
         <ImageView
-            android:id="@+id/search_iv_del"
+            android:id="@+id/manager_iv_del"
             android:layout_width="40dp"
             android:layout_height="25dp"
             android:layout_marginRight="10dp"
@@ -27,7 +27,7 @@
             android:src="@mipmap/delete"/>
     </RelativeLayout>
     <TextView
-        android:id="@+id/search_managerTv"
+        android:id="@+id/manager_managerTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -35,27 +35,25 @@
         android:text="城市管理"
         android:textSize="28dp"
         android:textColor="@color/black"
-        android:layout_below="@+id/search_top_ly"/>
+        android:layout_below="@+id/manager_top_ly"/>
 
     <SearchView
-        android:id="@+id/search_searchSv"
+        android:id="@+id/manager_searchSv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:layout_below="@+id/search_managerTv"
+        android:layout_below="@+id/manager_managerTv"
         android:background="@drawable/roundedcorners"
         android:queryHint="搜索全国天气"
         android:iconifiedByDefault="false"/>
     <ListView
-        android:id="@+id/search_Lv"
+        android:id="@+id/manager_Lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/search_searchSv"
+        android:layout_below="@+id/manager_searchSv"
         android:layout_marginTop="25dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:divider="@null"/>
 
 </RelativeLayout>

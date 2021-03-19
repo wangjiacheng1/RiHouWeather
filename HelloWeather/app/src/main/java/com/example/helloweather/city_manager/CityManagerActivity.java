@@ -53,10 +53,10 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void initView(){
-        backIv = findViewById(R.id.search_iv_back);
-        deleteIv = findViewById(R.id.search_iv_del);
-        searchView = findViewById(R.id.search_searchSv);
-        cityLv = findViewById(R.id.search_Lv);
+        backIv = findViewById(R.id.manager_iv_back);
+        deleteIv = findViewById(R.id.manager_iv_del);
+        searchView = findViewById(R.id.manager_searchSv);
+        cityLv = findViewById(R.id.manager_Lv);
 
         backIv.setOnClickListener(this);
         deleteIv.setOnClickListener(this);
@@ -66,13 +66,13 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.search_iv_back:
+            case R.id.manager_iv_back:
                 finish();
                 break;
-            case R.id.search_iv_del:
+            case R.id.manager_iv_del:
                 startActivity(new Intent(this, DeleteCityActivity.class));
                 break;
-            case R.id.search_searchSv:
+            case R.id.manager_searchSv:
                 int cityCount = DBManager.getCityCount();
                 if (cityCount < 5){
 
