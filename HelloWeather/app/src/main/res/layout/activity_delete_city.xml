@@ -1,9 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".city_manager.DeleteCityActivity">
+    tools:context=".city_manager.DeleteCityActivity"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/delete_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/delete_iv_back"
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:src="@mipmap/back"/>
+        <ImageView
+            android:id="@+id/delete_iv_enter"
+            android:layout_width="40dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:src="@mipmap/enter"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/delete_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:text="删除城市"
+        android:textSize="28dp"
+        android:textColor="@color/black"
+        android:layout_below="@+id/delete_top_layout"/>
+    <ListView
+        android:id="@+id/delete_lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="25dp"
+        android:divider="@null"
+        android:layout_below="@+id/delete_tv_title"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.helloweather.R;
@@ -61,7 +59,7 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
         backIv = findViewById(R.id.manager_iv_back);
         deleteIv = findViewById(R.id.manager_iv_del);
         searchView = findViewById(R.id.manager_search);
-        cityLv = findViewById(R.id.manager_Lv);
+        cityLv = findViewById(R.id.manager_lv);
 
         backIv.setOnClickListener(this);
         deleteIv.setOnClickListener(this);

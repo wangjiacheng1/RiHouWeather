@@ -24,7 +24,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:layout_alignParentRight="true"
-            android:src="@mipmap/delete"/>
+            android:src="@mipmap/delete0"/>
     </RelativeLayout>
     <TextView
         android:id="@+id/manager_managerTv"
@@ -65,7 +65,7 @@
 
     </RelativeLayout>
     <ListView
-        android:id="@+id/manager_Lv"
+        android:id="@+id/manager_lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/manager_search"

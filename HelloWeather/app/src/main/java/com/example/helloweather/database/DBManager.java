@@ -125,6 +125,10 @@ public class DBManager {
         int count = database.delete(TABLE_NAME,"cityCode=?",new String[]{cityCode});
         Log.d(TAG,"deleteCityByCode count: " + count);
     }
+    public static void deleteCityByName(String cityName){
+        int count = database.delete(TABLE_NAME,"cityName=?",new String[]{cityName});
+        Log.d(TAG,"deleteCityByName count: " + count);
+    }
 
     //根据城市代码，更新数据
     public static void updateCityByCode(String cityCode, DataBaseBean bean){
