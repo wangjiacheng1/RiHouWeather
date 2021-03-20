@@ -5,12 +5,14 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.helloweather.city_manager.CityManagerActivity;
 import com.example.helloweather.database.DBManager;
@@ -31,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<ImageView> imgList;
 
     CityFragmentAdapter adapter;
+    Intent mIntent;
+    Context mContext;
 
     MyTask mTask;
 
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mContext = getApplicationContext();
         //为了美观隐藏toolbar
         getSupportActionBar().hide();
 
@@ -141,6 +146,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 DBManager.addCity("CN101060201");
                 cityList.add("石家庄");
                 DBManager.addCity("CN101090101");
+            }
+            //获取搜索界面传来的城市
+            mIntent = getIntent();
+            String searchCityName = mIntent.getStringExtra("searchCityName");
+            String searchCityCode = mIntent.getStringExtra("searchCityCode");
+            if (null != searchCityName){
+                if (!cityList.contains(searchCityName)){
+                    cityList.add(searchCityName);
+                    DBManager.addCity(searchCityCode);
+                }else {
+                    Toast.makeText(mContext,"搜索城市已存在",Toast.LENGTH_SHORT).show();
+                }
             }
 
             imgList = new ArrayList<>();

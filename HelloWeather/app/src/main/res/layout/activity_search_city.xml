@@ -24,7 +24,9 @@
         android:layout_toLeftOf="@+id/search_iv_submit"
         android:hint="搜索全国城市:"
         android:gravity="center_vertical"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:imeOptions="actionSearch"
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/search_tv"

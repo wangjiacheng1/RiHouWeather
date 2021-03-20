@@ -24,7 +24,7 @@ public class DBManager {
         database = dbHelper.getWritableDatabase();
     }
 
-    //查找数据库当中所有城市
+    //查找数据库当中所有城市名字
     public static List<String> queryAllCityName(){
         Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
         List<String> cityList = new ArrayList<String>();
@@ -70,17 +70,16 @@ public class DBManager {
         return cityList;
     }
 
-    //查询数据库中所有城市代码，以防重复添加
-    public static Set<String> queryAllCityCode(){
-        Cursor cursor = database.query(TABLE_NAME, null, null, null, null, null, null);
-        Set<String> citySet = new HashSet<String>();
-        while (cursor.moveToNext()){
-            String cityCode = cursor.getString(cursor.getColumnIndex("cityCode"));
-            if (!citySet.add(cityCode)){
-                deleteCityByCode(cityCode);
-            }
+    /**
+     * 判断是否重复添加
+     * return 1为数据库中已存在
+     */
+    public static boolean isExist(String cityName){
+        Cursor cursor = database.query(TABLE_NAME,null, "cityName=?", new String[]{cityName},null, null, null);
+        if (cursor.getColumnCount() == 0){
+            return false;
         }
-        return citySet;
+        return true;
     }
 
     //新增城市信息

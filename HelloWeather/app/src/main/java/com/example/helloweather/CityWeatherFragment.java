@@ -95,7 +95,6 @@ public class CityWeatherFragment extends Fragment implements View.OnClickListene
                     String status = String.valueOf(weatherBean.getCode());
                     Code code = Code.toEnum(status);
                     Log.i(TAG, "failed code: " + code);
-
                 }
             }
 

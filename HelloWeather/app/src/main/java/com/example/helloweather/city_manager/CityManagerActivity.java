@@ -2,11 +2,14 @@ package com.example.helloweather.city_manager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -20,15 +23,17 @@ import java.util.List;
 public class CityManagerActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageView backIv, deleteIv;
-    SearchView searchView;
+    RelativeLayout searchView;
     ListView cityLv;
     List<DataBaseBean> mDatas;
     private CityManagerAdapter adapter;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_manager);
+        mContext = getApplicationContext();
         //隐藏toolbar
         getSupportActionBar().hide();
 
@@ -55,13 +60,25 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
     public void initView(){
         backIv = findViewById(R.id.manager_iv_back);
         deleteIv = findViewById(R.id.manager_iv_del);
-        searchView = findViewById(R.id.manager_searchSv);
+        searchView = findViewById(R.id.manager_search);
         cityLv = findViewById(R.id.manager_Lv);
 
         backIv.setOnClickListener(this);
         deleteIv.setOnClickListener(this);
         searchView.setOnClickListener(this);
     }
+
+    View.OnFocusChangeListener mListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            int cityCount = DBManager.getCityCount();
+            if (cityCount < 5){
+                startActivity(new Intent(CityManagerActivity.this, SearchCityActivity.class));
+            }else {
+                Toast.makeText(mContext,"存储数量已达上限：5，请删除后再添加",Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -72,14 +89,13 @@ public class CityManagerActivity extends AppCompatActivity implements View.OnCli
             case R.id.manager_iv_del:
                 startActivity(new Intent(this, DeleteCityActivity.class));
                 break;
-            case R.id.manager_searchSv:
+            case R.id.manager_search:
                 int cityCount = DBManager.getCityCount();
                 if (cityCount < 5){
-
+                    startActivity(new Intent(this, SearchCityActivity.class));
                 }else {
                     Toast.makeText(this,"存储数量已达上限：5，请删除后再添加",Toast.LENGTH_SHORT).show();
                 }
-                startActivity(new Intent(this, SearchCityActivity.class));
                 break;
         }
     }
