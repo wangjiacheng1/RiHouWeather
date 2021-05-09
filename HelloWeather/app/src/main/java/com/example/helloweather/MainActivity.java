@@ -52,7 +52,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 //        cityList = DBManager.queryAllCityName();
 
+    }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //获取数据库中的还剩的城市
+        List<String> curCities = DBManager.queryAllCityName();
+        if (curCities.size() == 0){
+            curCities.add("北京");
+            DBManager.addCity("CN101010100");
+        }
+        //重新加载前清空原数据源
+        cityList.clear();
+        cityList.addAll(curCities);
+        //剩余城市创建对应的fragment
+        fragmentList.clear();
+        initPager();
+
+        adapter.notifyDataSetChanged();
+        //页面数量改变，指示器的数量也会发生变化，重写设置指示器
+        imgList.clear();
+        pointLayout.removeAllViews(); //将原布局中的元素清除
+        initPoint();
+        mainViewPager.setCurrentItem(fragmentList.size() - 1);
     }
 
     private void initView(){
@@ -71,10 +94,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.main_iv_add:
                 intent.setClass(this, CityManagerActivity.class);
-
                 break;
-            case R.id.main_iv_more:
-                break;
+//            case R.id.main_iv_more:
+//                break;
         }
         startActivity(intent);
     }
